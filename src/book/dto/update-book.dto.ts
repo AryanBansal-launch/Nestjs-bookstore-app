@@ -1,8 +1,19 @@
 import { Category } from './../schemas/book.schema';
+import { IsEnum, IsNotEmpty, IsNumber, IsString,IsOptional } from 'class-validator';
 export class UpdateBookDto {
-  readonly title: string;
-  readonly author: string;
-  readonly description: string;
-  readonly price: number;
-  readonly category: Category;
+   @IsOptional()
+    @IsString()
+    readonly title: string;
+    @IsOptional()
+    @IsString()
+    readonly author: string;
+    @IsOptional()
+    @IsString()
+    readonly description: string;
+    @IsOptional()
+    @IsNumber()
+    readonly price: number;
+    @IsOptional()
+    @IsEnum(Category,{message: 'Invalid category'})
+    readonly category: Category;
 }
