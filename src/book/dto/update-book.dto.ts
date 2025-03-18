@@ -14,6 +14,6 @@ export class UpdateBookDto {
     @IsNumber()
     readonly price: number;
     @IsOptional()
-    @IsEnum(Category,{message: 'Invalid category'})
+    @IsEnum(Category,{message: 'Invalid category!'})
     readonly category: Category;
 }

@@ -22,7 +22,7 @@ export class BookService {
     }
     async findById(id: string): Promise<Book> {
         if (!isValidObjectId(id)) {
-            throw new BadRequestException(`Invalid ID format: ${id}`);
+            throw new BadRequestException(`Invalid ID format: ${id}. Please enter a valid ID`);
         }
 
         const book = await this.bookModel.findById(id).exec();
