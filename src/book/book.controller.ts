@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post,Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post,Put, Req, UseGuards } from '@nestjs/common';
 import { BookService } from './book.service';
 import { Book } from './schemas/book.schema';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -19,8 +19,8 @@ export class BookController {
     //using the passport for it
     @Post('new')
     @UseGuards(AuthGuard())
-    async createBook(@Body() book: CreateBookDto): Promise<Book> {
-        return await this.bookService.create(book);
+    async createBook(@Body() book: CreateBookDto,@Req() req): Promise<Book> {
+        return await this.bookService.create(book,req.user);
     }
 
     @Get(':id')
