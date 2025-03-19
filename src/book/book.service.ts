@@ -28,7 +28,7 @@ export class BookService {
             throw new BadRequestException(`Invalid ID format: ${id}. Please enter a valid ID`);
         }
 
-        const book = await this.bookModel.findById(id).exec();
+        const book = await this.bookModel.findById(id);
         if (!book) {
             throw new NotFoundException(`Book with ID ${id} not found`);
         }

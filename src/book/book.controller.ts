@@ -15,10 +15,10 @@ export class BookController {
     }
 
 
-    //implemened authguard to protect the route
+    //implemened authguard using passport jwt strategy
     //using the passport for it
     @Post('new')
-    @UseGuards(AuthGuard())
+    @UseGuards(AuthGuard('jwt'))
     async createBook(@Body() book: CreateBookDto,@Req() req): Promise<Book> {
         return await this.bookService.create(book,req.user);
     }
