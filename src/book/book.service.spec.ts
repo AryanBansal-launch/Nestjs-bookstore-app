@@ -91,7 +91,7 @@ describe('BookService', () => {
     });
   });
 
-  //   //testing create method
+  //testing create method
   describe('create', () => {
     it('should create a book', async () => {
       jest.spyOn(model, 'create').mockImplementationOnce(() =>
@@ -131,6 +131,19 @@ describe('BookService', () => {
       });
 
       expect(result.title).toEqual(book.title);
+    });
+  });
+
+  //testing deleteById method
+  describe('deleteById', () => {
+    it('should delete and return a book', async () => {
+      jest.spyOn(model, 'findByIdAndDelete').mockResolvedValue(mockBook);
+
+      const result = await bookservice.deleteById(mockBook._id);
+
+      expect(model.findByIdAndDelete).toHaveBeenCalledWith(mockBook._id);
+
+      expect(result).toEqual(mockBook);
     });
   });
 });
