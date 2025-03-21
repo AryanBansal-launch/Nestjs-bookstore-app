@@ -2,7 +2,7 @@ import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, MinLength } from 'clas
 export class signupDTO {
   @IsNotEmpty()
   @IsString()
-  readonly name: string;
+  readonly username: string;
   @IsNotEmpty()
   @IsEmail({}, { message: 'Please enter a valid email' })
   readonly email: string;
