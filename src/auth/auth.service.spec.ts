@@ -10,6 +10,7 @@ import { signupDTO } from './dto/signup.dto';
 import { create } from 'domain';
 import { find } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
+import { Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
 
@@ -23,7 +24,6 @@ describe('AuthService', () => {
     name: 'Aryan',
     email: 'aryan1@gmail.com',
     password: 'hashedpassword',
-    _v: 0,
   };
 
   const mockAuthService = {
@@ -52,7 +52,28 @@ describe('AuthService', () => {
   describe('signup', () => {
     it('should register a new user', async () => {
       jest.spyOn(bcrypt, 'hash').mockImplementation(async () => "hashedPassword"); 
-      jest.spyOn(model, 'create').mockResolvedValue(mockUser);
+      jest.spyOn(model, 'create').mockImplementationOnce(() => mockUser as any);
+      jest.spyOn(jwtService, 'sign').mockImplementationOnce
+      (() => 'token');
+      const result = await authService.signUp(mockUser as unknown as signupDTO);
+      expect(bcrypt.hash).toBeCalled();
+      expect(result).toEqual({ token: 'token' });
+    });
+  });
+
+  describe('login', () => {
+    const loginDTO={
+      email:'aryan@gmail.com',
+      password:'12345678'
+    }
+    it('should login a user and return token', async () => {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(mockUser);
+      jest.spyOn(bcrypt,'compare').mockImplementationOnce(()=>true);
+      jest.spyOn(jwtService,'sign').mockImplementationOnce
+      (() => 'token');
+      const result = await authService.login(loginDTO as unknown as LoginDTO);
+      expect(bcrypt.compare).toBeCalled();
+      expect(result).toEqual({ token: 'token' });
     });
   });
 });
