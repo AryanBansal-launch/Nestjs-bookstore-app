@@ -12,6 +12,7 @@ import { find } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+import { UnauthorizedException } from '@nestjs/common';
 
 
 describe('AuthService', () => {
@@ -74,6 +75,12 @@ describe('AuthService', () => {
       const result = await authService.login(loginDTO as unknown as LoginDTO);
       expect(bcrypt.compare).toBeCalled();
       expect(result).toEqual({ token: 'token' });
+    });
+
+    it('should throw an error if user is not found', async () => {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(null);
+      await expect(authService.login(loginDTO as unknown as LoginDTO)).rejects.toThrow(UnauthorizedException);
+
     });
   });
 });
