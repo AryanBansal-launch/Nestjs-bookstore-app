@@ -12,7 +12,7 @@ import { find } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
-import { UnauthorizedException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 
 describe('AuthService', () => {
@@ -59,6 +59,11 @@ describe('AuthService', () => {
       const result = await authService.signUp(mockUser as unknown as signupDTO);
       expect(bcrypt.hash).toBeCalled();
       expect(result).toEqual({ token: 'token' });
+    });
+
+    it('should throw an error if duplicate user is found', async () => {
+      jest.spyOn(model, 'create').mockImplementationOnce(() => Promise.reject({code:11000}));
+      await expect(authService.signUp(mockUser as unknown as signupDTO)).rejects.toThrow(ConflictException);
     });
   });
 

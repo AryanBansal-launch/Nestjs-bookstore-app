@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { signupDTO } from './dto/signup.dto';
 import { LoginDTO } from './dto/login.dto';
 import { UnauthorizedException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 
 @Injectable()
 export class AuthService {
@@ -21,15 +22,22 @@ export class AuthService {
     const { username, email, password } = userdetail;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newuser = await this.userModel.create({
-      username,
-      email,
-      password: hashedPassword,
-    });
-
-    //genearting jwt token on signup
-    const token = this.jwtService.sign({ _id: newuser._id });
-    return { token };
+    try {
+        const newuser = await this.userModel.create({
+            username,
+            email,
+            password: hashedPassword,
+          });
+          //genearting jwt token on signup
+          const token = this.jwtService.sign({ _id: newuser._id });
+          return { token };
+    } 
+    catch (error) {
+        if(error.code === 11000){
+            throw new ConflictException('User already exists');
+      }
+      throw new Error('An unexpected error occurred during signup');
+    }
   }
 
   //login function
