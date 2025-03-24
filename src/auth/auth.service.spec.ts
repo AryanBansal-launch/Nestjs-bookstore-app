@@ -1,18 +1,15 @@
-import { mock } from 'node:test';
 import { beforeEach, describe, expect, it } from '@jest/globals';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { User } from '../auth/schemas/user.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import  { Model } from 'mongoose';
 import { LoginDTO } from './dto/login.dto';
 import { signupDTO } from './dto/signup.dto';
-import { create } from 'domain';
-import { find } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
-import { Document } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import e from 'express';
 
 
 describe('AuthService', () => {
@@ -46,11 +43,15 @@ describe('AuthService', () => {
     jwtService = module.get<JwtService>(JwtService);
   });
 
+  //checking if the service is defined
   it('should be defined',()=>{
     expect(authService).toBeDefined();
   });
 
+  //testing the signup function
   describe('signup', () => {
+
+    //testing scenerio when user is created successfully
     it('should register a new user', async () => {
       jest.spyOn(bcrypt, 'hash').mockImplementation(async () => "hashedPassword"); 
       jest.spyOn(model, 'create').mockImplementationOnce(() => mockUser as any);
@@ -61,6 +62,7 @@ describe('AuthService', () => {
       expect(result).toEqual({ token: 'token' });
     });
 
+    //testing scenerio when duplicate user is found
     it('should throw an error if duplicate user is found', async () => {
       jest.spyOn(model, 'create').mockImplementationOnce(() => Promise.reject({code:11000}));
       await expect(authService.signUp(mockUser as unknown as signupDTO)).rejects.toThrow(ConflictException);
@@ -72,6 +74,7 @@ describe('AuthService', () => {
       email:'aryan@gmail.com',
       password:'12345678'
     }
+    //testing scenerio when user is found
     it('should login a user and return token', async () => {
       jest.spyOn(model,'findOne').mockResolvedValueOnce(mockUser);
       jest.spyOn(bcrypt,'compare').mockImplementationOnce(()=>true);
@@ -82,10 +85,23 @@ describe('AuthService', () => {
       expect(result).toEqual({ token: 'token' });
     });
 
+    //testing scenerio when crdentials are incorrect
     it('should throw an error if user is not found', async () => {
       jest.spyOn(model,'findOne').mockResolvedValueOnce(null);
       await expect(authService.login(loginDTO as unknown as LoginDTO)).rejects.toThrow(UnauthorizedException);
-
     });
+
+    //testing scenerio of incorrect email
+    it('should throw an error if email is incorrect', async () => {
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(null);
+      await expect(authService.login(loginDTO as unknown as LoginDTO)).rejects.toThrow(UnauthorizedException);
+    });
+
+    //testing scenerio when password is incorrect
+    it('should throw an error if password is incorrect',async ()=>{
+      jest.spyOn(model,'findOne').mockResolvedValueOnce(mockUser);
+      jest.spyOn(bcrypt,'compare').mockImplementationOnce(()=>false);
+      await expect(authService.login(loginDTO as unknown as LoginDTO)).rejects.toThrow(new Error('Invalid password'));
+    })
   });
 });
