@@ -9,7 +9,7 @@ import { signupDTO } from './dto/signup.dto';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
-import e from 'express';
+
 
 
 describe('AuthService', () => {

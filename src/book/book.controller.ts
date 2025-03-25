@@ -14,7 +14,6 @@ export class BookController {
         return await this.bookService.findAll();
     }
 
-
     //implemened authguard using passport jwt strategy
     //using the passport for it
     @Post('new')
