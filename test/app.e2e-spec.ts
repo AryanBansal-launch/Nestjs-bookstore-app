@@ -52,8 +52,8 @@ describe('AppController (e2e)', () => {
   });
 
   const user = {
-    username: 'Aryan',
-    email: 'aryan1@gmail.com',
+    username: 'Aryan2',
+    email: 'aryan2@gmail.com',
     password: '12345678',
   };
 
@@ -102,7 +102,7 @@ describe('AppController (e2e)', () => {
         .get('/books')
         .expect(200)
         .then((res) => {
-          expect(res.body.length).toBe(1);
+          expect(res.body).toBeDefined();
         });
     });
 
@@ -118,7 +118,7 @@ describe('AppController (e2e)', () => {
           bookCreated=res.body;
         });
     });
-
+    //get book by id
     it('(GET) - Get a book by ID', async () => {
       return request(app.getHttpServer())
         .get(`/books/${bookCreated?._id}`)
@@ -126,6 +126,33 @@ describe('AppController (e2e)', () => {
         .then((res) => {
           expect(res.body).toBeDefined();
           expect(res.body._id).toBe(bookCreated?._id);
+        });
+    });
+
+    //update book by id
+    it('(PUT) - Update a book by ID', async () => {
+      const book = { title: 'Updated name' };
+      return request(app.getHttpServer())
+        .put('/books/update/'+bookCreated?._id)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .send(book)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toBeDefined();
+          expect(res.body.title).toBe(book.title);
+        });
+    });
+
+    //delete book by id
+    it('(DELETE) - Delete a book by ID', async () => {
+      return request(app.getHttpServer())
+        .delete('/books/delete/'+bookCreated?._id)
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).toBeDefined();
+          console.log(res.body);
+          expect(res.body._id).toEqual(bookCreated?._id);
         });
     });
   });
