@@ -4,11 +4,16 @@ import { Book } from './schemas/book.schema';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('books')
 export class BookController {
     constructor(private bookService: BookService) {}
 
+    @Roles(Role.Moderator,Role.Admin)
+    @UseGuards(AuthGuard(),RolesGuard)
     @Get()
     async getAllBooks(): Promise<Book[]> {
         return await this.bookService.findAll();
