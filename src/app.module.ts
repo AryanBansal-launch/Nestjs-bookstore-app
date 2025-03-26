@@ -5,7 +5,8 @@ import { BookModule } from './book/book.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 console.log("DB url is:",process.env.MONGODB_URL);//env file variables are accessible here
 @Module({
   imports: [ConfigModule.forRoot({
