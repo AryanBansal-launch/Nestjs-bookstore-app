@@ -69,5 +69,5 @@ export class BookController {
     ): Promise<Book> {
         return this.bookService.uploadBookImage(id, file);
     }
-  
+    
 }

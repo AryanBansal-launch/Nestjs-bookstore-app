@@ -10,7 +10,8 @@ import { CloudinaryService } from './cloudinary/cloudinary.provider';
 export class BookService {
     constructor(
         @InjectModel(Book.name)
-        private bookModel:mongoose.Model<Book>
+        private bookModel: mongoose.Model<Book>,
+        private cloudinaryService: CloudinaryService
     ){}
 
     async findAll():Promise<Book[]>{
@@ -59,11 +60,16 @@ export class BookService {
     async uploadBookImage(id: string, file: Express.Multer.File): Promise<Book> {
         const uploadedImage = await this.cloudinaryService.uploadImage(file) as { secure_url: string };
 
-        return this.bookModel.findByIdAndUpdate(
+        const updatedBook = await this.bookModel.findByIdAndUpdate(
             id,
             { imageUrl: uploadedImage.secure_url },
             { new: true }
-        ).exec();
+        );
+        if (!updatedBook) {
+            throw new NotFoundException(`Book with ID ${id} not found`);
+        }
+
+        return updatedBook;
     }
       
 }
