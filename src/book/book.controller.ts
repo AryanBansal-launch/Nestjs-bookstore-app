@@ -61,14 +61,13 @@ export class BookController {
   }
 
   @Put('upload/:id')
-  @UseGuards(AuthGuard())
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadImages(
-      @Param('id') id: string,
-      @UploadedFile() file: Express.Multer.File,
-  ) {
-      const uploadedImage = await this.cloudinaryService.uploadImage(file) as { secure_url: string };
-      return { imageUrl: uploadedImage.secure_url };
-  }
+    @UseGuards(AuthGuard())
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadImages(
+        @Param('id') id: string,
+        @UploadedFile() file: Express.Multer.File,
+    ): Promise<Book> {
+        return this.bookService.uploadBookImage(id, file);
+    }
   
 }

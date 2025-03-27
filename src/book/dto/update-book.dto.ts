@@ -21,4 +21,8 @@ export class UpdateBookDto {
 
      @IsEmpty({message:'You cannot pass user id'})
       readonly user: User;
+
+      @IsOptional()
+    @IsString()
+    imageUrl?: string;
 }

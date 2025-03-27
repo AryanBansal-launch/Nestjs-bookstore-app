@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import { Book } from './schemas/book.schema';
 import { isValidObjectId } from 'mongoose';
 import { User } from 'src/auth/schemas/user.schema';
+import { CloudinaryService } from './cloudinary/cloudinary.provider';
 
 @Injectable()
 export class BookService {
@@ -53,6 +54,16 @@ export class BookService {
             throw new NotFoundException(`Book with ID ${id} not found`);
         }
         return updatedBook;
+    }
+
+    async uploadBookImage(id: string, file: Express.Multer.File): Promise<Book> {
+        const uploadedImage = await this.cloudinaryService.uploadImage(file) as { secure_url: string };
+
+        return this.bookModel.findByIdAndUpdate(
+            id,
+            { imageUrl: uploadedImage.secure_url },
+            { new: true }
+        ).exec();
     }
       
 }

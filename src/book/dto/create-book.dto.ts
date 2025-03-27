@@ -1,6 +1,6 @@
 import { User } from '../../auth/schemas/user.schema';
 import { Category } from './../schemas/book.schema';
-import { IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEmpty, IsEnum, IsNotEmpty, IsNumber, IsString,IsOptional } from 'class-validator';
 export class CreateBookDto {
   @IsNotEmpty()
   @IsString()
@@ -20,4 +20,9 @@ export class CreateBookDto {
 
   @IsEmpty({message:'You cannot pass user id'})
   readonly user: User;
+
+  @IsOptional()
+    @IsString()
+    imageUrl?: string;
+  
 }
