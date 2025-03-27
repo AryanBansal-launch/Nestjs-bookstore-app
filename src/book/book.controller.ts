@@ -12,9 +12,9 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 export class BookController {
     constructor(private bookService: BookService) {}
 
-    @Roles(Role.Moderator,Role.Admin)
-    @UseGuards(AuthGuard(),RolesGuard)
     @Get()
+    @Roles(Role.Moderator)
+    @UseGuards(AuthGuard(),RolesGuard)
     async getAllBooks(): Promise<Book[]> {
         return await this.bookService.findAll();
     }
