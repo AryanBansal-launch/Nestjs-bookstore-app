@@ -1,24 +1,3 @@
-// import { Test, TestingModule } from '@nestjs/testing';
-// import { AuthController } from './auth.controller';
-// import { AuthService } from './auth.service';
-// import { User } from './schemas/user.schema';
-// import { getModelToken } from '@nestjs/mongoose';
-
-// describe('AuthController', () => {
-//   let controller: AuthController;
-
-//   beforeEach(async () => {
-//     const module: TestingModule = await Test.createTestingModule({
-//       controllers: [AuthController],
-//     }).compile();
-
-//     controller = module.get<AuthController>(AuthController);
-//   });
-
-//   it('should be defined', () => {
-//     expect(controller).toBeDefined();
-//   });
-// });
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -26,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { User } from 'src/auth/schemas/user.schema';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-
+import { Role } from 'src/auth/enums/role.enum';
 
 describe('AuthController', () => {
 
@@ -73,6 +52,7 @@ describe('AuthController', () => {
         username: 'Ghulam',
         email: 'ghulam1@gmail.com',
         password: '12345678',
+        role:[Role.User]
       };
 
       const result = await authcontroller.signUp(signUpDto);

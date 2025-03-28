@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseFilePipeBuilder,
   Post,
   Put,
   Req,
@@ -65,7 +66,9 @@ export class BookController {
     @UseInterceptors(FileInterceptor('file'))
     async uploadImages(
         @Param('id') id: string,
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({
+            fileType: `image/*`,
+        }).build()) file: Express.Multer.File,
     ): Promise<Book> {
         return this.bookService.uploadBookImage(id, file);
     }
