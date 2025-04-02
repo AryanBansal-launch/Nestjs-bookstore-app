@@ -56,16 +56,5 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      MONGO_URI: "mongodb+srv://Bansal29:Bansal%4029@cluster0.findv.mongodb.net/bookstore?retryWrites=true&w=majority"
+      MONGODB_URL: "mmongodb+srv://Bansal29:Bansal%4029@cluster0.findv.mongodb.net/bookstore?retryWrites=true&w=majority"
   
-  # Mongo Express UI
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081  # Corrected the port mapping
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: Bansal29
-      ME_CONFIG_MONGODB_ADMINPASSWORD: Bansal@29
-      ME_CONFIG_MONGODB_URL: mongodb+srv://Bansal29:Bansal%4029@cluster0.findv.mongodb.net/bookstore?retryWrites=true&w=majority
-      ME_CONFIG_BASICAUTH: false
